@@ -1,0 +1,22 @@
+{
+	"compilerOptions": {
+  	"module": "commonjs",
+    "lib": [
+      "es2019",
+      "es2020.promise",
+      "es2020.bigint",
+      "es2020.string"
+    ],
+    "outDir": "./dist",
+    "strict": true,
+  	"noImplicitAny": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+  	"removeComments": true,
+ 		"preserveConstEnums": true,
+  	"sourceMap": true,
+    "esModuleInterop": true
+	},
+	"include": ["src/**/*"],
+	"exclude": ["node_modules", "**/*.spec.ts"]
+}

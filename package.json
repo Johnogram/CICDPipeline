@@ -1,0 +1,19 @@
+{
+  "name": "ci-cd-pipeline",
+  "version": "1.0.0",
+  "main": "dist/app.js",
+  "repository": "git@github.com:Johnogram/CICDPipeline.git",
+  "author": "John Minns <john.minns@missguided.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "start": "node ./dist/app.js"
+  },
+  "dependencies": {
+    "@types/express": "^4.17.11",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "typescript": "^4.2.4"
+  }
+}
