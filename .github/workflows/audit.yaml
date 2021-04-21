@@ -13,4 +13,4 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Yarn Audit
-        run: yarn Audit
+        run: yarn audit
