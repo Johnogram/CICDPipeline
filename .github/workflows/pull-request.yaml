@@ -24,9 +24,6 @@ jobs:
       - name: Install Yarn Dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Build
-        run: yarn build
-
       - name: Run Linter
         run: yarn lint
 
@@ -52,3 +49,6 @@ jobs:
           name: Test Results
           path: ./reports/junit/
           retention-days: 3
+
+      - name: Build
+        run: yarn build
