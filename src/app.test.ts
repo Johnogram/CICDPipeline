@@ -4,8 +4,8 @@ describe('App', () => {
     expect(true).toEqual(true);
   });
 
-  test('second unit tests run correctly', () => {
+  test('second unit tests to fail', () => {
     // Expect no coverage to start to trigger pipeline fail later
-    expect(true).toEqual(true);
+    expect(true).toEqual(false);
   });
 });
