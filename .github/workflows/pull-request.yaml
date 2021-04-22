@@ -28,7 +28,7 @@ jobs:
         run: yarn build
 
       - name: Run Linter
-        run: yarn lint --format junit -o reports/junit/js-eslint-results.xml
+        run: yarn lint --format junit
 
       - name: Run Tests
         run: yarn run test:cover --ci --runInBand --reporters=default --reporters=jest-junit
@@ -39,6 +39,7 @@ jobs:
 
       - name: Save Test Coverage
         uses: actions/upload-artifact@v2
+        if: ${{ always() }}
         with:
           name: Test Coverage
           path: ./coverage
@@ -46,6 +47,7 @@ jobs:
 
       - name: Save Test Results
         uses: actions/upload-artifact@v2
+        if: ${{ always() }}
         with:
           name: Test Results
           path: ./reports/junit/
