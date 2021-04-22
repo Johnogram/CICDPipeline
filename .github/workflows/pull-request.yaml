@@ -28,7 +28,7 @@ jobs:
         run: yarn build
 
       - name: Run Linter
-        run: yarn lint --format junit
+        run: yarn lint
 
       - name: Run Tests
         run: yarn run test:cover --ci --runInBand --reporters=default --reporters=jest-junit
