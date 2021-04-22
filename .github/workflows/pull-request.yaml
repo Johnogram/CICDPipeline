@@ -39,6 +39,7 @@ jobs:
 
       - name: Save Test Coverage
         uses: actions/upload-artifact@v2
+        if: ${{ always() }}
         with:
           name: Test Coverage
           path: ./coverage
@@ -46,6 +47,7 @@ jobs:
 
       - name: Save Test Results
         uses: actions/upload-artifact@v2
+        if: ${{ always() }}
         with:
           name: Test Results
           path: ./reports/junit/
