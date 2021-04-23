@@ -1,9 +1,13 @@
 name: Path To Staging
 
 on:
-  push:
+  workflow_run:
+    workflows:
+      - Pull Request Checks
     branches:
       - staging
+    types:
+      - completed
 
 jobs:
   build:
