@@ -56,6 +56,9 @@ jobs:
       - name: Update deployment file
         run: sed -i 's|johnogram/cicdpipeline:latest|registry.digitalocean.com/johnogram-cicd/johnogram-cicd:staging|' $GITHUB_WORKSPACE/k8s.yml
 
+      - name: Debug Output Deployment
+        run: cat $GITHUB_WORKSPACE/k8s.yml
+
       - name: Save DigitalOcean kubeconfig with short-lived credentials
         run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 staging-johnogram-cicd-k8s
 
