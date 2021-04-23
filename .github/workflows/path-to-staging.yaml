@@ -13,4 +13,4 @@ jobs:
     steps:
 
       - name: Run Linter
-        run: yarn lint
+        run: echo "Hello World!"
