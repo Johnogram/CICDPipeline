@@ -1,0 +1,69 @@
+name: Path To Live
+
+on:
+  workflow_run:
+    workflows:
+      - Pull Request Checks
+    branches:
+      - main
+    types:
+      - completed
+
+jobs:
+  build-and-push:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout Main
+        uses: actions/checkout@v2
+        with:
+          ref: main
+
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+      - name: Build Docker Image
+        run: docker build -t registry.digitalocean.com/johnogram-cicd/johnogram-cicd:main .
+
+      - name: Log in to DigitalOcean Container Registry with short-lived credentials
+        run: doctl registry login --expiry-seconds 1200
+
+      - name: Push Docker Image
+        run: docker push registry.digitalocean.com/johnogram-cicd/johnogram-cicd:main
+
+  deploy:
+
+    needs: build-and-push
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout main
+        uses: actions/checkout@v2
+        with:
+          ref: main
+
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+      - name: Update deployment file
+        run: sed -i 's|johnogram/cicdpipeline:latest|registry.digitalocean.com/johnogram-cicd/johnogram-cicd:main|' $GITHUB_WORKSPACE/k8s.yml
+
+      - name: Debug Output Deployment
+        run: cat $GITHUB_WORKSPACE/k8s.yml
+
+      - name: Save DigitalOcean kubeconfig with short-lived credentials
+        run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 master-johnogram-cicd-k8s
+
+      - name: Deploy to DigitalOcean Kubernetes
+        run: kubectl apply -f $GITHUB_WORKSPACE/k8s.yml
+
+      - name: Verify deployment
+        run: kubectl rollout status deployment/cicdpipeline
