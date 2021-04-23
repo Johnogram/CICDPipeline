@@ -39,3 +39,22 @@ jobs:
 
       - name: Push Docker Image
         run: docker push 975411558615.dkr.ecr.eu-west-2.amazonaws.com/johnogram-cicd:staging
+
+  deploy:
+
+    needs: build-and-push
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+      - name: Update deployment file
+        run: sed -i 's|johnogram/cicdpipeline:latest|975411558615.dkr.ecr.eu-west-2.amazonaws.com/johnogram-cicd:staging|' $GITHUB_WORKSPACE/k8s.yml
+
+      - name: Check deployment
+        run: cat $GITHUB_WORKSPACE/k8s.yml
