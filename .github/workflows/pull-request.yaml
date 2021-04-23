@@ -1,0 +1,54 @@
+name: Pull Request Checks
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  prepare:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - uses: actions/checkout@v2
+
+      - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Run Dependencies Audit
+        run: yarn audit
+
+      - name: Install Yarn Dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Run Linter
+        run: yarn lint
+
+      - name: Run Tests
+        run: yarn run test:cover --ci --runInBand --reporters=default --reporters=jest-junit
+        env:
+          JEST_JUNIT_OUTPUT_DIR: ./reports/junit/
+          JEST_JUNIT_OUTPUT_NAME: js-jest-results.xml
+          JEST_JUNIT_ANCESTOR_SEPARATOR: " > "
+
+      - name: Save Test Coverage
+        uses: actions/upload-artifact@v2
+        if: ${{ always() }}
+        with:
+          name: Test Coverage
+          path: ./coverage
+          retention-days: 3
+
+      - name: Save Test Results
+        uses: actions/upload-artifact@v2
+        if: ${{ always() }}
+        with:
+          name: Test Results
+          path: ./reports/junit/
+          retention-days: 3
+
+      - name: Build
+        run: yarn build
