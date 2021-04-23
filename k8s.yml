@@ -15,7 +15,6 @@ spec:
       containers:
         - name: cicdpipeline
           image: johnogram/cicdpipeline:latest
-          imagePullPolicy: Never
           ports:
             - containerPort: 3000
 ---
