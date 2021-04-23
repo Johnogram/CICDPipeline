@@ -41,6 +41,10 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    env:
+      ENV_NAME: production
+      DOMAIN_NAME: main.minns.dev
+
     steps:
 
       - name: Checkout main
@@ -54,7 +58,10 @@ jobs:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
       - name: Update deployment file
-        run: sed -i 's|johnogram/cicdpipeline:latest|registry.digitalocean.com/johnogram-cicd/johnogram-cicd:main|' $GITHUB_WORKSPACE/k8s.yml
+        run: |
+          sed -i 's|development|'${ENV_NAME}'|' $GITHUB_WORKSPACE/k8s.yml
+          sed -i 's|dev.minns.local|'${DOMAIN_NAME}'|' $GITHUB_WORKSPACE/k8s.yml
+          sed -i 's|johnogram/cicdpipeline:latest|registry.digitalocean.com/johnogram-cicd/johnogram-cicd:main|' $GITHUB_WORKSPACE/k8s.yml
 
       - name: Debug Output Deployment
         run: cat $GITHUB_WORKSPACE/k8s.yml
