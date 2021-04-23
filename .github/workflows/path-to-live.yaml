@@ -27,13 +27,13 @@ jobs:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
       - name: Build Docker Image
-        run: docker build -t registry.digitalocean.com/johnogram-cicd/johnogram-cicd:main .
+        run: docker build -t registry.digitalocean.com/johnogram-cicd/johnogram-cicd:$(echo $GITHUB_SHA | head -c7) .
 
       - name: Log in to DigitalOcean Container Registry with short-lived credentials
         run: doctl registry login --expiry-seconds 1200
 
       - name: Push Docker Image
-        run: docker push registry.digitalocean.com/johnogram-cicd/johnogram-cicd:main
+        run: docker push registry.digitalocean.com/johnogram-cicd/johnogram-cicd:$(echo $GITHUB_SHA | head -c7)
 
   deploy:
 
@@ -61,7 +61,7 @@ jobs:
         run: |
           sed -i 's|development|'${ENV_NAME}'|' $GITHUB_WORKSPACE/k8s.yml
           sed -i 's|dev.minns.local|'${DOMAIN_NAME}'|' $GITHUB_WORKSPACE/k8s.yml
-          sed -i 's|johnogram/cicdpipeline:latest|registry.digitalocean.com/johnogram-cicd/johnogram-cicd:main|' $GITHUB_WORKSPACE/k8s.yml
+          sed -i 's|johnogram/cicdpipeline:latest|registry.digitalocean.com/johnogram-cicd/johnogram-cicd:$(echo $GITHUB_SHA | head -c7)|' $GITHUB_WORKSPACE/k8s.yml
 
       - name: Debug Output Deployment
         run: cat $GITHUB_WORKSPACE/k8s.yml
