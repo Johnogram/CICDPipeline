@@ -1,4 +1,5 @@
 module.exports = {
+  clearMocks: true,
   collectCoverageFrom: [
     './src/**/*',
     '!**/*.d.ts',
