@@ -17,6 +17,11 @@ spec:
           image: johnogram/cicdpipeline:latest
           ports:
             - containerPort: 3000
+          env:
+          - name: ENV_NAME
+            value: development
+          - name: DOMAIN_NAME
+            value: dev.minns.local
 ---
 apiVersion: v1
 kind: Service
