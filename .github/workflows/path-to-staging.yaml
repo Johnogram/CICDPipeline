@@ -17,9 +17,7 @@ jobs:
     steps:
 
       - name: Checkout Staging
-        uses: actions/checkout@v2
-        with:
-          path: staging
+        uses: actions/checkout@staging
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
